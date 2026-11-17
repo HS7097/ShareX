@@ -66,13 +66,11 @@ internal static class ApplicationDiagnostics
     internal static void WriteStartupFlags()
     {
         List<string> flags = [];
-        if (ApplicationInfo.Dev) flags.Add(nameof(ApplicationInfo.Dev));
         if (StartupOptions.MultiInstance) flags.Add(nameof(StartupOptions.MultiInstance));
         if (StartupOptions.Portable) flags.Add(nameof(StartupOptions.Portable));
         if (StartupOptions.SilentRun) flags.Add(nameof(StartupOptions.SilentRun));
         if (StartupOptions.Sandbox) flags.Add(nameof(StartupOptions.Sandbox));
         if (StartupOptions.IgnoreHotkeyWarning) flags.Add(nameof(StartupOptions.IgnoreHotkeyWarning));
-        if (SystemOptions.DisableUpdateCheck) flags.Add(nameof(SystemOptions.DisableUpdateCheck));
         if (SystemOptions.DisableUpload) flags.Add(nameof(SystemOptions.DisableUpload));
         if (SystemOptions.DisableLogging) flags.Add(nameof(SystemOptions.DisableLogging));
 

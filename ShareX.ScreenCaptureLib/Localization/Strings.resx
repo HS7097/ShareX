@@ -570,4 +570,16 @@
   <data name="ScrollingCaptureWindow_Upload_Save" xml:space="preserve">
     <value>Upload / Save</value>
   </data>
+  <data name="ManualScrollingCapture_Instructions" xml:space="preserve">
+    <value>Scroll down smoothly inside the selected content. Pauses keep recording. Press the scrolling-capture hotkey again, or activate the capture window, to finish. An orange border means overlap is uncertain; pause briefly.</value>
+  </data>
+  <data name="ManualScrollingCapture_Interval" xml:space="preserve">
+    <value>Capture interval</value>
+  </data>
+  <data name="ManualScrollingCapture_FrameUnavailable" xml:space="preserve">
+    <value>Could not capture the selected region. The capture has stopped.</value>
+  </data>
+  <data name="ManualScrollingCapture_NoOverlap" xml:space="preserve">
+    <value>The frames could not be matched reliably. Only the verified portion is shown. Scroll more slowly and select only the scrolling content, excluding fixed sidebars and input boxes.</value>
+  </data>
 </root>

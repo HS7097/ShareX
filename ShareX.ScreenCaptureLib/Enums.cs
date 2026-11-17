@@ -253,6 +253,7 @@ namespace ShareX.ScreenCaptureLib
         MouseWheel,
         DownArrow,
         PageDown,
-        ScrollMessage
+        ScrollMessage,
+        Manual
     }
 }

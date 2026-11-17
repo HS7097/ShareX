@@ -50,7 +50,7 @@ internal static class ApplicationInfo
         ShareXBuild.Unknown;
 #endif
 
-    internal const bool Dev = true;
+    internal const bool Dev = false;
 
     internal static string VersionText
     {
@@ -61,7 +61,7 @@ internal static class ApplicationInfo
             versionText.Append(version.Major).Append('.').Append(version.Minor);
             if (version.Build > 0 || version.Revision > 0) versionText.Append('.').Append(version.Build);
             if (version.Revision > 0) versionText.Append('.').Append(version.Revision);
-            if (Dev) versionText.Append(" Dev");
+            versionText.Append(" Manual");
             if (StartupOptions.Portable) versionText.Append(" Portable");
             return versionText.ToString();
         }

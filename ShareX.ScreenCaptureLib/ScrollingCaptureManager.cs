@@ -105,6 +105,11 @@ namespace ShareX.ScreenCaptureLib
 
                     await Task.Delay(Options.StartDelay);
 
+                    if (Options.ScrollMethod == ScrollMethod.Manual)
+                    {
+                        return await CaptureManualAsync(regionWindow);
+                    }
+
                     if (Options.AutoScrollTop)
                     {
                         InputHelpers.SendKeyPress(VirtualKeyCode.HOME);
@@ -200,6 +205,67 @@ namespace ShareX.ScreenCaptureLib
             }
 
             return status;
+        }
+
+        private async Task<ScrollingCaptureStatus> CaptureManualAsync(ScrollingCaptureRegionWindow regionWindow)
+        {
+            using ManualScrollStitcher stitcher = new();
+            Screenshot screenshot = new() { CaptureCursor = false };
+            Stopwatch noOverlap = null;
+            int interval = Math.Clamp(Options.ManualCaptureInterval, 20, 1000);
+
+            try
+            {
+                while (!stopRequested)
+                {
+                    Stopwatch timer = Stopwatch.StartNew();
+                    using Bitmap frame = screenshot.CaptureRectangle(selectedRectangle);
+                    if (frame == null)
+                    {
+                        throw new InvalidOperationException(Localization.Strings.ManualScrollingCapture_FrameUnavailable);
+                    }
+
+                    ManualScrollFrameResult result = await Task.Run(() => stitcher.AddFrame(frame));
+                    if (result == ManualScrollFrameResult.NoOverlap)
+                    {
+                        if (noOverlap == null)
+                        {
+                            DebugHelper.WriteLine("WARNING: Manual scrolling capture has no reliable overlap. Keeping the last matched frame and retrying for at most 2 seconds.");
+                            noOverlap = Stopwatch.StartNew();
+                            regionWindow?.SetWarning(true);
+                        }
+
+                        if (noOverlap.ElapsedMilliseconds >= 2000 || stopRequested)
+                        {
+                            throw new InvalidOperationException(Localization.Strings.ManualScrollingCapture_NoOverlap);
+                        }
+                    }
+                    else
+                    {
+                        if (noOverlap != null)
+                        {
+                            DebugHelper.WriteLine("Manual scrolling capture recovered a reliable overlap.");
+                            noOverlap = null;
+                            regionWindow?.SetWarning(false);
+                        }
+                    }
+
+                    // An unchanged viewport is a pause, including when the scrollbar reaches the bottom.
+                    await Task.Delay(Math.Max(1, interval - (int)timer.ElapsedMilliseconds));
+                }
+
+                if (noOverlap != null)
+                {
+                    throw new InvalidOperationException(Localization.Strings.ManualScrollingCapture_NoOverlap);
+                }
+
+                status = ScrollingCaptureStatus.Successful;
+                return status;
+            }
+            finally
+            {
+                Result = stitcher.BuildResult();
+            }
         }
 
         public void StopCapture()

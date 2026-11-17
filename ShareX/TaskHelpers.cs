@@ -2725,40 +2725,6 @@ namespace ShareX
             ActionsToolbarWindowIntegration.Toggle();
         }
 
-        public static async Task DownloadDevBuild()
-        {
-            GitHubUpdateChecker updateChecker = new GitHubUpdateChecker("ShareX", "DevBuilds")
-            {
-                IsDev = true,
-                IsPortable = StartupOptions.Portable
-            };
-
-            await updateChecker.CheckUpdateAsync();
-
-            if (updateChecker.Status == UpdateStatus.UpdateAvailable)
-            {
-                await UpdateMessageWindow.StartAsync(updateChecker);
-            }
-            else if (updateChecker.Status == UpdateStatus.UpToDate)
-            {
-                MessageBox.Show(Strings.ShareXIsUpToDate, "ShareX", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        public static async Task DownloadAppVeyorBuild()
-        {
-            AppVeyorUpdateChecker updateChecker = new AppVeyorUpdateChecker()
-            {
-                IsDev = true,
-                IsPortable = StartupOptions.Portable,
-                Branch = "develop"
-            };
-
-            await updateChecker.CheckUpdateAsync();
-
-            await UpdateMessageWindow.StartAsync(updateChecker);
-        }
-
         public static Image GenerateQRCode(string text, int size)
         {
             if (CheckQRCodeContent(text))

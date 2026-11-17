@@ -149,8 +149,8 @@ public partial class ScrollingCaptureWindow : Window
         catch (Exception ex)
         {
             DebugHelper.WriteException(ex);
-            StatusText.Text = ex.Message;
             SetStatus(ScrollingCaptureStatus.Failed);
+            StatusText.Text = ex.Message;
             RestoreAndActivate();
             ex.ShowError();
         }
@@ -162,6 +162,7 @@ public partial class ScrollingCaptureWindow : Window
 
     private async Task CaptureSelectedWindowAsync()
     {
+        bool captureSucceeded = false;
         SetCaptureControlsEnabled(false);
         ResultSizeText.Text = string.Empty;
         ResetPreview();
@@ -173,13 +174,14 @@ public partial class ScrollingCaptureWindow : Window
         {
             ScrollingCaptureStatus status = await _service.StartCaptureAsync();
             SetStatus(status);
+            captureSucceeded = status != ScrollingCaptureStatus.Failed;
             _playNotificationSound?.Invoke();
         }
         catch (Exception ex)
         {
             DebugHelper.WriteException(ex);
-            StatusText.Text = ex.Message;
             SetStatus(ScrollingCaptureStatus.Failed);
+            StatusText.Text = ex.Message;
             ex.ShowError();
         }
         finally
@@ -189,7 +191,7 @@ public partial class ScrollingCaptureWindow : Window
             RestoreAndActivate();
         }
 
-        if (_service.Options.AutoUpload)
+        if (captureSucceeded && _service.Options.AutoUpload)
         {
             UploadResult();
         }
@@ -315,6 +317,7 @@ public partial class ScrollingCaptureWindow : Window
         options.StartDelay = Value(StartDelayInput);
         options.AutoScrollTop = AutoScrollTopInput.IsChecked == true;
         options.ScrollDelay = Value(ScrollDelayInput);
+        options.ManualCaptureInterval = Value(ManualIntervalInput);
         options.ScrollMethod = (ScrollMethod)Math.Max(0, ScrollMethodInput.SelectedIndex);
         options.ScrollAmount = Value(ScrollAmountInput);
         options.AutoUpload = AutoUploadInput.IsChecked == true;
@@ -329,6 +332,7 @@ public partial class ScrollingCaptureWindow : Window
         StartDelayInput.Value = options.StartDelay;
         AutoScrollTopInput.IsChecked = options.AutoScrollTop;
         ScrollDelayInput.Value = options.ScrollDelay;
+        ManualIntervalInput.Value = options.ManualCaptureInterval;
         ScrollMethodInput.SelectedIndex = (int)options.ScrollMethod;
         ScrollAmountInput.Value = options.ScrollAmount;
         AutoUploadInput.IsChecked = options.AutoUpload;
@@ -341,10 +345,15 @@ public partial class ScrollingCaptureWindow : Window
 
     private void UpdateScrollAmountVisibility()
     {
-        bool isVisible = (ScrollMethod)ScrollMethodInput.SelectedIndex != ScrollMethod.PageDown;
+        bool manual = (ScrollMethod)ScrollMethodInput.SelectedIndex == ScrollMethod.Manual;
+        bool isVisible = !manual && (ScrollMethod)ScrollMethodInput.SelectedIndex != ScrollMethod.PageDown;
         ScrollAmountLabel.IsVisible = isVisible;
         ScrollAmountInput.IsVisible = isVisible;
         ScrollAmountHint.IsVisible = isVisible;
+        ScrollDelayInput.IsEnabled = !manual;
+        AutoScrollTopInput.IsEnabled = !manual;
+        AutoIgnoreBottomEdgeInput.IsEnabled = !manual;
+        ManualOptions.IsVisible = manual;
     }
 
     private static int Value(NumericUpDown input) => (int)(input.Value ?? 0);

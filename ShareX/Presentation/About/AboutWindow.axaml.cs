@@ -41,8 +41,6 @@ public partial class AboutWindow : Window
 {
     private readonly AvaloniaBitmap _logoBitmap;
     private readonly ShareXClickerControl _clicker;
-    private UpdateChecker? _updateChecker;
-    private bool _updateChecked;
 
     public AboutWindow()
     {
@@ -68,12 +66,6 @@ public partial class AboutWindow : Window
 #elif MicrosoftStore
         BuildText.Text = Strings.AboutWindow_MicrosoftStoreBuild;
         BuildText.IsVisible = true;
-#else
-        if (!SystemOptions.DisableUpdateCheck)
-        {
-            UpdatePanel.IsVisible = true;
-            UpdateStatusText.Text = Strings.AboutWindow_CheckingForUpdates;
-        }
 #endif
 
         Opened += OnOpened;
@@ -84,46 +76,7 @@ public partial class AboutWindow : Window
         };
     }
 
-    private async void OnOpened(object? sender, EventArgs e)
-    {
-        Activate();
-
-        if (!UpdatePanel.IsVisible || _updateChecked)
-        {
-            return;
-        }
-
-        _updateChecked = true;
-        _updateChecker = ApplicationState.UpdateManager.CreateUpdateChecker();
-        await _updateChecker.CheckUpdateAsync();
-
-        UpdateProgress.IsVisible = false;
-
-        switch (_updateChecker.Status)
-        {
-            case UpdateStatus.UpdateCheckFailed:
-                UpdateStatusText.Text = Strings.AboutWindow_UpdateCheckFailed;
-                break;
-            case UpdateStatus.UpdateAvailable:
-                UpdateStatusText.IsVisible = false;
-                UpdateAvailableButton.Content = Strings.AboutWindow_NewVersionAvailable;
-                UpdateAvailableButton.IsVisible = true;
-                break;
-            case UpdateStatus.UpToDate:
-                UpdateStatusText.Text = Strings.AboutWindow_UpToDate;
-                break;
-        }
-    }
-
-    private async void OnUpdateAvailableClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        if (_updateChecker == null)
-        {
-            return;
-        }
-
-        await UpdateMessageWindow.StartAsync(_updateChecker);
-    }
+    private void OnOpened(object? sender, EventArgs e) => Activate();
 
     private void OnLinkClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {

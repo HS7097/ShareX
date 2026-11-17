@@ -28,6 +28,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.Threading;
 using ShareX.HelpersLib;
 using System;
@@ -69,6 +70,11 @@ public partial class ScrollingCaptureRegionWindow : Window
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
+    }
+
+    internal void SetWarning(bool warning)
+    {
+        RegionBorder.AccentBrush = warning ? Brushes.OrangeRed : Brushes.Lime;
     }
 
     private void OnOpened(object? sender, EventArgs e)

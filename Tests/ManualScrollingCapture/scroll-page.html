@@ -1,0 +1,42 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>ShareX manual scroll test</title>
+<style>
+body { margin: 24px; font: 18px Arial; background: #e7ebf0; color: #15293c; }
+button { padding: 8px 16px; font-size: 18px; }
+#viewport { margin-top: 16px; width: 800px; height: 600px; overflow-y: scroll; background: white; }
+.row { height: 40px; box-sizing: border-box; padding: 8px 24px; white-space: nowrap; }
+</style>
+<h1>ShareX manual scroll test</h1>
+<p>Select only the inside of the 800 × 600 content pane, excluding its scrollbar.</p>
+<button onclick="start()">Start steady scrolling</button>
+<button onclick="viewport.scrollTop=0">Back to top</button>
+<span id="status">Ready; press S after capture starts.</span>
+<div id="viewport"></div>
+<script>
+const viewport = document.querySelector('#viewport');
+const status = document.querySelector('#status');
+for (let i=1; i<=100; i++) {
+  const row = document.createElement('div');
+  row.className = 'row';
+  row.style.background = `hsl(${(i*137)%360} 45% 92%)`;
+  row.textContent = `Row ${String(i).padStart(3,'0')} | ${((i*2654435761)>>>0).toString(16)} | steady scrolling capture`;
+  viewport.append(row);
+}
+let running=false;
+function start() {
+  if (running) return;
+  running=true;
+  const t=performance.now(), initial=viewport.scrollTop;
+  function tick(now) {
+    const seconds=(now-t)/1000;
+    const active=seconds < 4 ? seconds : seconds < 7 ? 4 : seconds-3;
+    viewport.scrollTop=initial+Math.min(3400,Math.round(active*200));
+    status.textContent=seconds>=4 && seconds<7 ? 'Paused for 3 seconds' : `Offset ${viewport.scrollTop} px`;
+    if(viewport.scrollTop < viewport.scrollHeight-viewport.clientHeight) requestAnimationFrame(tick);
+    else { running=false; status.textContent='Bottom reached; stop ShareX manually.'; }
+  }
+  requestAnimationFrame(tick);
+}
+addEventListener('keydown',e=>{if(e.key.toLowerCase()==='s' && !e.ctrlKey && !e.altKey)start();});
+</script>

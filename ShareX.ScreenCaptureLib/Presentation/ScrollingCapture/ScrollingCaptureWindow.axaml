@@ -203,6 +203,14 @@
                             </Grid>
 
                             <StackPanel Grid.Row="2" Spacing="8">
+                                <StackPanel x:Name="ManualOptions" Spacing="8">
+                                    <TextBlock Text="{x:Static localization:Strings.ManualScrollingCapture_Instructions}" TextWrapping="Wrap"/>
+                                    <Grid ColumnDefinitions="170,*,Auto" ColumnSpacing="8">
+                                        <TextBlock Classes="option-label" Text="{x:Static localization:Strings.ManualScrollingCapture_Interval}"/>
+                                        <NumericUpDown x:Name="ManualIntervalInput" Grid.Column="1" Minimum="20" Maximum="1000" Increment="10" FormatString="0"/>
+                                        <TextBlock Grid.Column="2" Classes="option-hint" Text="{x:Static localization:Strings.ScrollingCaptureWindow_Milliseconds}"/>
+                                    </Grid>
+                                </StackPanel>
                                 <CheckBox x:Name="AutoScrollTopInput" Content="{x:Static localization:Strings.ScrollingCaptureWindow_Automatically_scroll_to_top}"/>
                                 <CheckBox x:Name="AutoIgnoreBottomEdgeInput" Content="{x:Static localization:Strings.ScrollingCaptureWindow_Auto_ignore_bottom_edge}"/>
                                 <CheckBox x:Name="ShowRegionInput" Content="{x:Static localization:Strings.ScrollingCaptureWindow_Show_capture_region}"/>

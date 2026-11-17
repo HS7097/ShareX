@@ -559,4 +559,16 @@
   <data name="ScrollingCaptureWindow_Upload_Save" xml:space="preserve">
     <value>上传 / 保存</value>
   </data>
+  <data name="ManualScrollingCapture_Instructions" xml:space="preserve">
+    <value>请在选定的正文区域内匀速向下滚动。停顿时会继续等待。再次按滚动截图快捷键，或切回截图窗口，即可结束。边框变橙色表示暂时无法匹配，请暂停片刻。</value>
+  </data>
+  <data name="ManualScrollingCapture_Interval" xml:space="preserve">
+    <value>采样间隔</value>
+  </data>
+  <data name="ManualScrollingCapture_FrameUnavailable" xml:space="preserve">
+    <value>无法读取选定区域，截图已停止。</value>
+  </data>
+  <data name="ManualScrollingCapture_NoOverlap" xml:space="preserve">
+    <value>无法可靠拼接画面，当前仅显示已确认的部分。请降低滚动速度，并只框选滚动正文，避开固定侧栏和输入框。</value>
+  </data>
 </root>
