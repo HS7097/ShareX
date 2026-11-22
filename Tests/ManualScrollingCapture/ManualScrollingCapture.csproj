@@ -5,7 +5,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" />
-    <Compile Include="../../ShareX.ScreenCaptureLib/ManualScrollStitcher.cs" Link="ManualScrollStitcher.cs" />
+    <ProjectReference Include="../../ShareX.ScreenCaptureLib/ShareX.ScreenCaptureLib.csproj" />
   </ItemGroup>
 </Project>

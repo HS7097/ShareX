@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 
 int passed = 0;
+Run("The capture region border signals a mismatch and recovery", WarningBorder.Check);
 Run("Continuous scrolling preserves every row", () =>
 {
     using SKBitmap page = PatternPage(256, 2400);

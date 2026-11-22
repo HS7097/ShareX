@@ -27,7 +27,6 @@
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Threading;
 using ShareX.HelpersLib;
@@ -65,11 +64,6 @@ public partial class ScrollingCaptureRegionWindow : Window
         ConfigureGeometry(1);
 
         Opened += OnOpened;
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
     }
 
     internal void SetWarning(bool warning)

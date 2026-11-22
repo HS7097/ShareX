@@ -5,6 +5,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="ManualScrollingCapture" />
     <PackageReference Include="Vortice.Direct3D11" />
   </ItemGroup>
   <ItemGroup>
